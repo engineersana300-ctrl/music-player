@@ -1,6 +1,7 @@
 #include "song.h"
 #include <iomanip>
 #include <sstream>
+
 using namespace std;
 
 Song::Song(const string& title,
@@ -9,17 +10,16 @@ Song::Song(const string& title,
            const string& genre,
            int year,
            int duration,
-           const string& filePath)
-    : title(title), artist(artist), albume(album), genere(genre), 
-      year(year), duration(duration), filePath(filePath) {}
+           const string& filePath) 
+    : title(title), artist(artist), album(album), genre(genre), year(year), duration(duration), filePath(filePath) {}
 
 string Song::getTitle() const { return title; }
 string Song::getArtist() const { return artist; }
-string Song::getAlbum() const { return albume; }
-string Song::getGenre() const { return genere; }
-int Song::getYear() const { return year; }
-int Song::getDurationSec() const { return duration; }
-string Song::GetFilePath() const { return filePath; }
+string Song::getAlbum() const { return album; } // Fixed: albume -> album
+string Song::getGenre() const { return genre; } // Fixed: genere -> genre
+int    Song::getDuration() const { return duration; } // Fixed: getDurationSec -> getDuration
+int    Song::getYear() const { return year; }
+string Song::getFilePath() const { return filePath; } // Fixed: GetFilePath -> getFilePath
 
 string Song::providDuration() const {
     int min = duration / 60;

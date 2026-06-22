@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
-
+#include "Playlist.h"
 namespace fs = std::filesystem;
 
 void M3uLoader::loadAll(const std::string& directoryPath, MusicLibrary& library) {

@@ -74,7 +74,7 @@ vector<Song*> MusicLibrary::getAllSongs() const {
 
 Song* MusicLibrary::findSongByPath(const std::string& path) const {
     for (Song* song : songs) {
-        if (song->GetFilePath() == path) {
+        if (song->getFilePath() == path) {
             return song;
         }
     }
