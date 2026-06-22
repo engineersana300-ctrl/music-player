@@ -1,14 +1,16 @@
 #include "Application.h"
-#include "CsvLoader.h"
+#include "CSVLoader.h"
 #include "M3uLoader.h"
-#include "ConcreteScreens.h" // <-- Hook in the concrete views
+#include "Screen.h"
+#include "ConcreteScreens.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 Application::Application() : running(true) {}
 
 void Application::loadSettings() {
-    std::ifstream file("Data/settings.cfg");
+    std::ifstream file("../Data/settings.cfg");
     if (!file.is_open()) return;
 
     std::string line;
@@ -28,56 +30,48 @@ void Application::loadSettings() {
 }
 
 void Application::saveSettings() {
-    std::ofstream file("Data/settings.cfg");
+    std::ofstream file("../Data/settings.cfg");
     if (!file.is_open()) return;
 
     file << "playback_mode=" << static_cast<int>(player.getPlaybackMode()) << "\n";
     if (player.getCurrentSong()) {
-        file << "last_song=" << player.getCurrentSong()->getFilePath() << "\n";
+        file << "last_song=" << player.getCurrentSong()->GetFilePath() << "\n";
     }
 }
 
 void Application::init() {
-    CsvLoader::load("Data/library.csv", library);
-    M3uLoader::loadAll("Data/Playlists", library);
+    // Populate the database repositories from previous branch work
+    CSVLoader csvLoader;
+    csvLoader.load("../Data/library.csv", library);
+    M3uLoader::loadAll("../Data/Playlists", library);
     loadSettings();
 }
 
 void Application::run() {
-    // 1. Instantiate the view panels right on the stack frame
     MainMenuScreen mainMenu(player);
-    BrowsePlaylistScreen browseScreen(player, library);
+    BrowsePlaylistScreen browse(player, library);
     NowPlayingScreen nowPlaying(player);
-
-    // 2. Establish our polymorphic base pointer viewer
-    Screen* activeView = &mainMenu;
-    ScreenType routingTarget = ScreenType::MAIN_MENU;
-
-    // 3. The Production Application Event Loop
+    
+    Screen* current = &mainMenu;
+    ScreenType next = ScreenType::MAIN_MENU;
+    
     while (running) {
-        // Continuous hardware streaming heartbeat calculation check
-        player.tick(); 
+        player.tick();
         
-        // Polymorphic Call 1: Render whatever layout is currently active
-        activeView->render();
+#ifdef _WIN32
+        std::system("cls");
+#else
+        std::system("clear");
+#endif
         
-        // Polymorphic Call 2: Capture stream extractions and get next destination routing command
-        routingTarget = activeView->handleInput();
-
-        // Evaluate application layout redirection demands
-        switch (routingTarget) {
-            case ScreenType::MAIN_MENU:
-                activeView = &mainMenu;
-                break;
-            case ScreenType::BROWSE_PLAYLISTS:
-                activeView = &browseScreen;
-                break;
-            case ScreenType::NOW_PLAYING:
-                activeView = &nowPlaying;
-                break;
-            case ScreenType::EXIT:
-                running = false;
-                break;
+        current->render();
+        next = current->handleInput();
+        
+        switch (next) {
+            case ScreenType::MAIN_MENU:        current = &mainMenu; break;
+            case ScreenType::NOW_PLAYING:      current = &nowPlaying; break;
+            case ScreenType::BROWSE_PLAYLISTS: current = &browse; break;
+            case ScreenType::EXIT:             running = false; break;
         }
     }
     shutdown();
