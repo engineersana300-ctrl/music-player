@@ -5,7 +5,7 @@
 #include "CSVLoader.h"
 using namespace std;
 
-void CSVLoader :: load (const path& string , MusicLibrary& library) {
+void CSVLoader::load(const string& path, MusicLibrary& library) {
     ifstream file(path);
 
     if (!file.is_open()) {
