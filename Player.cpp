@@ -32,7 +32,7 @@ void Player::loadSong(Song* song) {
     }
 
     // Append standard fallback data folder structural pathing if needed
-    std::string fullPath = "Data" + song->getFilePath();
+    std::string fullPath = "..\\Data" + song->GetFilePath();
     ma_result result = ma_sound_init_from_file(&engine, fullPath.c_str(), 0, NULL, NULL, &sound);
     
     if (result == MA_SUCCESS) {
