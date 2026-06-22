@@ -2,8 +2,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "MusicLibrary.h"
 #include "song.h"
+#include "Playlist.h"
 
 using namespace std;
 
@@ -28,7 +30,7 @@ vector<Song*> MusicLibrary::filterByArtist(const string& artist) const {
             result.push_back(song);
     }
     return result;
-};
+}
 
 vector<Song*> MusicLibrary::filterByAlbum(const string& album) const {
     vector<Song*> result;
@@ -37,7 +39,7 @@ vector<Song*> MusicLibrary::filterByAlbum(const string& album) const {
             result.push_back(song);
     }
     return result;
-};
+}
 
 vector<Song*> MusicLibrary::filterByTitle(const string& title) const {
     vector<Song*> result;
@@ -46,7 +48,7 @@ vector<Song*> MusicLibrary::filterByTitle(const string& title) const {
             result.push_back(song);
     }
     return result;
-};
+}
 
 vector<Song*> MusicLibrary::search(const string& query) const {
     vector<Song*> result;
@@ -70,11 +72,34 @@ vector<Song*> MusicLibrary::getAllSongs() const {
     return songs;
 }
 
-
-
-
-MusicLibrary::~MusicLibrary() 
-{
-    for (auto* song : songs) delete song;
+Song* MusicLibrary::findSongByPath(const std::string& path) const {
+    for (Song* song : songs) {
+        if (song->GetFilePath() == path) {
+            return song;
+        }
+    }
+    return nullptr;
 }
 
+void MusicLibrary::addPlaylist(Playlist* playlist) {
+    if (playlist) {
+        playlists[playlist->getName()] = playlist;
+    }
+}
+
+const std::map<std::string, Playlist*>& MusicLibrary::getPlaylists() const {
+    return playlists;
+}
+
+Playlist* MusicLibrary::getPlaylist(const std::string& name) const {
+    auto it = playlists.find(name);
+    if (it != playlists.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
+MusicLibrary::~MusicLibrary() {
+    for (auto* song : songs) delete song;
+    for (auto& pair : playlists) delete pair.second;
+}
