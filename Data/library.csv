@@ -1,0 +1,4 @@
+title,artist,album,genre,year,duration_sec,file_path
+Bohemian Rhapsody,Queen,A Night at the Opera,Rock,1975,354,Data/music/bohemian.mp3
+Hotel California,Eagles,Hotel California,Rock,1977,391,Data/music/hotel.mp3
+MALFORMED_ROW,MissingFields,,,,,

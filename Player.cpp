@@ -32,7 +32,7 @@ void Player::loadSong(Song* song) {
     }
 
     // Append standard fallback data folder structural pathing if needed
-    std::string fullPath = "..\\Data" + song->GetFilePath();
+    std::string fullPath = "..\\Data" + song->getFilePath();
     ma_result result = ma_sound_init_from_file(&engine, fullPath.c_str(), 0, NULL, NULL, &sound);
     
     if (result == MA_SUCCESS) {
@@ -84,8 +84,7 @@ void Player::stop() {
 }
 
 void Player::next() {
-    if (!activePlaylist || activePlaylist->empty()) return;
-
+    if (!activePlaylist || activePlaylist->getSongs().empty()) return;
     if (mode == PlaybackMode::REPEAT_ONE && currentSong) {
         loadSong(currentSong);
         play();
@@ -109,8 +108,7 @@ void Player::next() {
 }
 
 void Player::prev() {
-    if (!activePlaylist || activePlaylist->empty()) return;
-
+    if (!activePlaylist || activePlaylist->getSongs().empty()) return;
     currentSongIndex--;
     if (currentSongIndex < 0) {
         currentSongIndex = mode == PlaybackMode::REPEAT_ALL ? static_cast<int>(activePlaylist->getSongs().size()) - 1 : 0;
