@@ -96,7 +96,7 @@ public:
                 std::string targetName = playlistCache[numericSelection - 1];
                 Playlist* selectedPlaylist = library.getPlaylist(targetName);
                 
-                if (selectedPlaylist && !selectedPlaylist->empty()) {
+                if (selectedPlaylist && !selectedPlaylist->getSongs().empty()) {
                     // Update player contextual references and kick off streaming audio
                     player.setPlaylist(selectedPlaylist);
                     player.loadSong(selectedPlaylist->getSongs()[0]);
@@ -156,7 +156,7 @@ public:
             
             // Extract current audio driver PCM cursor timings
             int currentPlaybackSec = static_cast<int>(player.getCursorSec());
-            drawTimelineBar(currentPlaybackSec, currentTrack->getDurationSec());
+            drawTimelineBar(currentPlaybackSec, currentTrack->getDuration());
         } else {
             std::cout << " \n    [System Notice: Audio engine idle]\n\n";
         }
